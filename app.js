@@ -5,13 +5,15 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var database = require("./config/database");
 var auth = require("./auth/main_auth")
+var cors = require('cors')
 
 
 var empleadosRouter = require('./routes/empleados.router');
 var usuarioRouter = require('./routes/usuario.router');
 
-var app = express();
 
+
+var app = express();
 
 
 app.use(logger('dev'));
@@ -20,10 +22,13 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(cors())
+
+
 // conexion de Mongo
 database.mongoConnect();
 
-
+app.use('/usuarios', usuarioRouter);
 
 
 
@@ -31,7 +36,7 @@ database.mongoConnect();
 
 app.use('/empleados', empleadosRouter);
 
-app.use('/usuarios', usuarioRouter);
+
 
 app.use(auth)
 
